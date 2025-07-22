@@ -134,12 +134,19 @@ func (c cli) GetStorePath(ctx context.Context, installable string) (bool, *nix.S
 		return false, nil, err
 	}
 
-	var storePath cmdPathInfoOutputStorePath
+	var (
+		storePath string
+		storePathInfo *cmdPathInfoOutputStorePathInfo
+	)
 	{
 		var pathInfo cmdPathInfoOutput
 		switch err := json.NewDecoder(stdout).Decode(&pathInfo); {
 		case err == nil && len(pathInfo) == 1:
-			storePath = pathInfo[0]
+			for key, value := range pathInfo {
+				storePath = key
+				storePathInfo = value
+			}
+
 		case err == nil && len(pathInfo) == 0:
 			return false, nil, fmt.Errorf("no store path provided for installable %q", installable)
 		case err == nil && len(pathInfo) > 1:
@@ -149,9 +156,9 @@ func (c cli) GetStorePath(ctx context.Context, installable string) (bool, *nix.S
 		}
 	}
 
-	return storePath.Valid, &nix.StorePath{
-		Derivation: storePath.Deriver,
-		Output:     storePath.Path,
+	return (storePathInfo != nil), &nix.StorePath{
+		Derivation: storePathInfo.Deriver,
+		Output:     storePath,
 	}, nil
 }
 

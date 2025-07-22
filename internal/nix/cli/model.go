@@ -7,16 +7,17 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-type cmdPathInfoOutput []cmdPathInfoOutputStorePath
+type cmdPathInfoOutput map[string]*cmdPathInfoOutputStorePathInfo
 
-type cmdPathInfoOutputStorePath struct {
+type cmdPathInfoOutputStorePathInfo struct {
+	CA               string   `json:"ca"`
 	Deriver          string   `json:"deriver"`
 	NarHash          string   `json:"narHash"`
 	NarSize          int      `json:"narSize"`
-	Path             string   `json:"path"`
 	References       []string `json:"references"`
 	RegistrationTime int      `json:"registrationTime"`
-	Valid            bool     `json:"valid"`
+	Signatures       []string `json:"signatures"`
+	Ultimate         bool     `json:"ultimate"`
 }
 
 type cmdDerivationShowOutput map[string]cmdDerivationShowOutputDerivation
