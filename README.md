@@ -90,7 +90,7 @@ In the same directory, create a `main.tf` file with the following content:
 terraform {
   required_providers {
     nix = {
-      source = "krostar/nix"
+      source = "ikubetoomuzik/nix"
     }
   }
 }

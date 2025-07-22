@@ -1,4 +1,4 @@
-module github.com/krostar/terraform-provider-nix
+module github.com/ikubetoomuzik/terraform-provider-nix
 
 go 1.22
 

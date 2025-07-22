@@ -10,5 +10,5 @@ set -o nounset
 set -o xtrace
 
 goimports -w "$@"
-gci write "$@" --custom-order --section "standard" --section "default" --section "Prefix(github.com/krostar/)" --section "Prefix(github.com/krostar/terraform-provider-nix)"
+gci write "$@" --custom-order --section "standard" --section "default" --section "Prefix(github.com/ikubetoomuzik/)" --section "Prefix(github.com/ikubetoomuzik/terraform-provider-nix)"
 gofumpt -extra -w "$@"

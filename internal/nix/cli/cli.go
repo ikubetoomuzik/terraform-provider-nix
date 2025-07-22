@@ -10,7 +10,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/krostar/terraform-provider-nix/internal/nix"
+	"github.com/ikubetoomuzik/terraform-provider-nix/internal/nix"
 )
 
 type cli struct{}

@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 
-	nixcli "github.com/krostar/terraform-provider-nix/internal/nix/cli"
+	nixcli "github.com/ikubetoomuzik/terraform-provider-nix/internal/nix/cli"
 )
 
 // New creates a new provider.

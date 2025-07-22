@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 
-	"github.com/krostar/terraform-provider-nix/internal/provider"
+	"github.com/ikubetoomuzik/terraform-provider-nix/internal/provider"
 )
 
 // Run the docs generation tool, check its repository for more information on how it works and how docs can be customized.
@@ -23,7 +23,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/krostar/nix",
+		Address: "registry.terraform.io/ikubetoomuzik/nix",
 		Debug:   debug,
 	}
 

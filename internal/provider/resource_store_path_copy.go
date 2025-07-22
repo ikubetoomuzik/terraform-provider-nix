@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/krostar/terraform-provider-nix/internal/nix"
+	"github.com/ikubetoomuzik/terraform-provider-nix/internal/nix"
 )
 
 type (
