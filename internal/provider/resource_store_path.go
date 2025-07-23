@@ -7,6 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"golang.org/x/sync/errgroup"
 
@@ -20,6 +23,7 @@ type (
 		Output      types.String `tfsdk:"output_path"`
 		Derivation  types.String `tfsdk:"drv_path"`
 		System      types.String `tfsdk:"system"`
+		IsBuilt     types.Bool   `tfsdk:"is_built"`
 	}
 )
 
@@ -36,6 +40,9 @@ func (*resourceStorePath) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"installable": schema.StringAttribute{
 				MarkdownDescription: "Nix installable (store path, nix packages, flake attribute, nix expressions, ...).",
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"output_path": schema.StringAttribute{
 				MarkdownDescription: "Path to the derivation output.",
@@ -44,10 +51,23 @@ func (*resourceStorePath) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"drv_path": schema.StringAttribute{
 				MarkdownDescription: "Path to the derivation file.",
 				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"system": schema.StringAttribute{
 				MarkdownDescription: "System for which the derivation is built.",
 				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"is_built": schema.BoolAttribute{
+				MarkdownDescription: "Whether the installable exists in the nix store.",
+				Computed:            true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.RequiresReplace(),
+				},
 			},
 		},
 	}
@@ -90,6 +110,7 @@ func (r *resourceStorePath) buildInstallable(ctx context.Context, model *resourc
 	model.Derivation = types.StringValue(storePath.Derivation)
 	model.Output = types.StringValue(storePath.Output)
 	model.System = types.StringValue(derivation.System)
+	model.IsBuilt = types.BoolValue(true)
 }
 
 func (r *resourceStorePath) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -133,14 +154,10 @@ func (r *resourceStorePath) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	if exists := drvExists && outputExists; !exists {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-
 	state.Derivation = types.StringValue(derivation.Path.Derivation)
 	state.Output = types.StringValue(derivation.Path.Output)
 	state.System = types.StringValue(derivation.System)
+	state.IsBuilt = types.BoolValue(drvExists && outputExists)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
