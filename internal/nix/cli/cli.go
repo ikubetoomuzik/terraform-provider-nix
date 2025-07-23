@@ -156,10 +156,15 @@ func (c cli) GetStorePath(ctx context.Context, installable string) (bool, *nix.S
 		}
 	}
 
-	return (storePathInfo != nil), &nix.StorePath{
-		Derivation: storePathInfo.Deriver,
-		Output:     storePath,
-	}, nil
+	var pathData *nix.StorePath = nil
+	if storePathInfo != nil {
+		pathData = &nix.StorePath{
+			Derivation: storePathInfo.Deriver,
+			Output:     storePath,
+		}
+	}
+
+	return (storePathInfo != nil), pathData, nil
 }
 
 func (c cli) CopyStorePath(ctx context.Context, req nix.CopyRequest) error {
